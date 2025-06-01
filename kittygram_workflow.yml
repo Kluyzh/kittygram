@@ -34,8 +34,6 @@ jobs:
         POSTGRES_USER: user
         POSTGRES_PASSWORD: password
         POSTGRES_DB: database
-        # Сервер БД запущен в Docker, но его порт проброшен на хост
-        # Поэтому подключаемся к 127.0.0.1:5432
         DB_HOST: 127.0.0.1
         DB_PORT: 5432
       run: |
@@ -84,6 +82,7 @@ jobs:
       run: |
         cd frontend/
         npm run test
+
   build_frontend_and_push_to_docker_hub:
     name: Push frontend Docker image to DockerHub
     runs-on: ubuntu-latest
@@ -104,7 +103,6 @@ jobs:
           context: ./frontend/
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_frontend:latest
-
 
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to DockerHub
