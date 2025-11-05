@@ -1,86 +1,66 @@
-# 🐱 Kittygram - Платформа для котиков
+# Kittygram - социальная сеть для размещение фотографий домашних животных.
 
-**Kittygram** - это социальная платформа, где вы можете делиться информацией о своих котах: фотографиями, достижениями, годом рождения и окрасом.
+## Описание проекта
+Проект, где пользователи могут регистрироваться, загружать фотографии кошек с описанием их достижений, а также любоваться на других котов.
 
-## 🛠 Технологии
-- **Бэкенд:** Django 3.2 + DRF + Djoser
-- **Фронтенд:** React (судя по структуре)
-- **База данных:** PostgreSQL
-- **Веб-сервер:** Nginx
-- **Развертывание:** Docker Compose
+## Технологии
+• Python 3.9
+• Django==3.2.16
+• djangorestframework==3.12.4
+• nginx
+• djoser==2.1.0
 
-## ⚙️ Зависимости
-Основные зависимости (полный список в `backend/requirements.txt`):
-```python
-Django==3.2.3
-djangorestframework==3.12.4
-djoser==2.1.0
-psycopg2-binary==2.9.3
-Pillow==9.0.0
-gunicorn==20.1.0
+## Автор
+Илья Клюжев https://github.com/kluyzh 
 
-🚀 Запуск проекта через Docker Compose
-Создайте файл .env в корне проекта со следующим содержанием:
+## Что cделано:
 
-# Базовые настройки Django
-SECRET_KEY=ваш_секретный_ключ
-DEBUG=False
-ALLOWED_HOSTS=localhost,127.0.0.1,ваш-домен.ru
+- Настроен запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
+- В корне проекта есть файл `kittygram_workflow.yml`.
 
-# Настройки PostgreSQL
-POSTGRES_DB=kittygram
-POSTGRES_USER=kittygram_user
-POSTGRES_PASSWORD=ваш_надежный_пароль
+### Как запустить проект:
+Клонировать репозиторий и перейти в него в командной строке:
+
+```
+git clone <https or SSH URL>
+```
+
+Перейти в корневую директорию
+```
+cd kittygram_final
+```
+
+Создать файл .evn для хранения ключей:
+
+```
+SECRET_KEY='указать секретный ключ'
+ALLOWED_HOSTS='указать имя или IP хоста'
+POSTGRES_DB: django_db
+POSTGRES_USER: django_user
+POSTGRES_PASSWORD: django_password
+DB_NAME=kittygram
 DB_HOST=db
 DB_PORT=5432
+```
 
-Запустите проект:
+Запустить docker-compose.production:
 
-docker-compose up --build
-Применяйте миграции (в новом терминале):
+```
+docker compose -f docker-compose.production.yml up
+```
 
-bash
-docker-compose exec backend python manage.py migrate
+Выполнить миграции, сбор статики:
 
-Создайте суперпользователя:
+```
+docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /static/static/
 
-bash
-docker-compose exec backend python manage.py createsuperuser
-Проект будет доступен по адресу: http://localhost:9000
+```
 
-Структура проекта
-kittygram_final/
-├── backend/          # Django-приложение
-│   ├── cats/         # Приложение с функционалом котиков
-│   ├── kittygram_backend/ # Основные настройки проекта
-│   ├── requirements/
-│   └── manage.py
-├── frontend/         # React-приложение
-├── nginx/            # Конфигурация Nginx
-│   ├── Dockerfile
-│   └── nginx.conf
-└── docker-compose.yml # Конфигурация Docker
-Ручная установка (без Docker)
-Бэкенд:
-bash
-cd backend
-python -m venv venv
-source venv/bin/activate или source venv/Scripts/activate
-cd requirements
-pip install -r requirements.txt
+Создать суперпользователя, ввести почту, логин, пароль:
 
-# Создайте .env файл как указано выше
-python manage.py migrate
-python manage.py runserver
-
-Фронтенд:
-bash
-cd frontend
-npm install
-npm run build
-
-
-Для продакшена установите:
-
-DEBUG = False
-ALLOWED_HOSTS = ['ваш-домен.ru', 'IP-адрес-сервера']
+```
+docker compose -f docker-compose.production.yml exec backend python manage.py createsuperuser
+```
