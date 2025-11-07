@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -26,6 +27,10 @@ class Cat(models.Model):
         null=True,
         default=None
     )
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ('-created_at', 'name')
 
     def __str__(self):
         return self.name
