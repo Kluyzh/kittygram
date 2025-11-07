@@ -5,7 +5,7 @@
 
 ## Технологии
 • Python 3.9
-• Django==3.2.16
+• Django==3.2.3
 • djangorestframework==3.12.4
 • nginx
 • djoser==2.1.0
@@ -16,7 +16,7 @@
 ## Что cделано:
 
 - Настроен запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
+- Пуш в ветку main запускает линтеры, тестирование, сборк и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
 - В корне проекта есть файл `kittygram_workflow.yml`.
 
 ### Как запустить проект:
@@ -25,42 +25,24 @@
 ```
 git clone <https or SSH URL>
 ```
-
-Перейти в корневую директорию
-```
-cd kittygram_final
-```
-
-Создать файл .evn для хранения ключей:
+Создать файл .evn для хранения ключей в корне проекта:
 
 ```
 SECRET_KEY='указать секретный ключ'
-ALLOWED_HOSTS='указать имя или IP хоста'
+ALLOWED_HOSTS='указать имя,IP хоста,"backend"'
 POSTGRES_DB: django_db
 POSTGRES_USER: django_user
 POSTGRES_PASSWORD: django_password
-DB_NAME=kittygram
 DB_HOST=db
 DB_PORT=5432
+DEBUG=False
 ```
 
-Запустить docker-compose.production:
-
+Из основной директории
 ```
-docker compose -f docker-compose.production.yml up
+docker compose up -d
 ```
-
-Выполнить миграции, сбор статики:
-
+Сайт доступен
 ```
-docker compose -f docker-compose.production.yml exec backend python manage.py migrate
-docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
-docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /static/static/
-
-```
-
-Создать суперпользователя, ввести почту, логин, пароль:
-
-```
-docker compose -f docker-compose.production.yml exec backend python manage.py createsuperuser
+http://127.0.0.1:9000/
 ```
